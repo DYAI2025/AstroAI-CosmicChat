@@ -1,5 +1,8 @@
 import type { MarkerWeight } from '@quizzme/domain';
 
+// Re-export for convenience
+export type { MarkerWeight } from '@quizzme/domain';
+
 export interface QuizMeta {
   id: string;
   title: string;
