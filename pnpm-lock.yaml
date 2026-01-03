@@ -144,6 +144,22 @@ importers:
         specifier: ^1.0.0
         version: 1.6.1(@types/node@22.19.3)
 
+  packages/quiz-content:
+    dependencies:
+      '@quizzme/domain':
+        specifier: workspace:*
+        version: link:../domain
+    devDependencies:
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(jiti@1.21.7)(postcss@8.5.6)(typescript@5.8.3)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.8.3
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.1(@types/node@22.19.3)
+
   packages/storage:
     devDependencies:
       typescript:
