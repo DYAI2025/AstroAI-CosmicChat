@@ -15,7 +15,10 @@ export function isValidMarkerId(id: string): boolean {
   const match = id.match(/^marker\.(\w+)\.(\w+)$/);
   if (!match) return false;
 
-  const [, category, name] = match;
+  const category = match[1];
+  const name = match[2];
+  if (!category || !name) return false;
+
   const categoryMarkers = MARKERS[category as MarkerCategory];
   return categoryMarkers ? categoryMarkers.includes(name) : false;
 }

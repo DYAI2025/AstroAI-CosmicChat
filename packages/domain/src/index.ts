@@ -122,3 +122,36 @@ export type {
   TraitDefinition,
   RegistryStats,
 } from './profile';
+
+// ============================================================================
+// Markers (Quiz Marker System)
+// ============================================================================
+
+export {
+  // Registry
+  MARKERS,
+  isValidMarkerId,
+  getMarkerCategory,
+
+  // Mapping
+  MARKER_TO_BIG_FIVE,
+  getTraitWeights,
+
+  // Aggregator
+  aggregateMarkers,
+} from './markers';
+
+export type {
+  // Types
+  MarkerCategory,
+  MarkerWeight,
+  MarkerContribution,
+
+  // Mapping types
+  BigFiveTrait,
+  TraitWeight,
+
+  // Aggregator types
+  MarkerInput,
+  BigFiveDeltas,
+} from './markers';
