@@ -104,9 +104,26 @@ export type {
   AuthService,
 } from './auth';
 
+// Sync types
+export type {
+  SyncStatus,
+  SyncState,
+  SyncOperationType,
+  SyncOperation,
+  SyncResult,
+  ConflictType,
+  SyncConflict,
+  ConflictResolution,
+  SyncService,
+  SyncEventType,
+  SyncEvent,
+  RemoteUpdatePayload,
+} from './sync';
+
 // ============================================================================
 // Re-export all types for convenience
 // ============================================================================
 
 export * from './types';
 export * from './auth';
+export * from './sync';
