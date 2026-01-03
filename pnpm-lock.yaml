@@ -59,6 +59,9 @@ importers:
       '@quizzme/domain':
         specifier: workspace:*
         version: link:../../packages/domain
+      '@quizzme/quiz-content':
+        specifier: workspace:*
+        version: link:../../packages/quiz-content
       '@quizzme/storage':
         specifier: workspace:*
         version: link:../../packages/storage

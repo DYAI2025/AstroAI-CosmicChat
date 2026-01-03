@@ -2,7 +2,6 @@
   "name": "@quizzme/quiz-content",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
