@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
 
+import { Providers } from '../components/Providers';
+import './globals.css';
+
 export const metadata: Metadata = {
-  title: 'QuizzMe - Cosmic Learning Journey',
-  description: 'Discover your cosmic potential through personalized quizzes and astrological insights.',
+  title: 'QuizzMe - Dein digitales Selbst',
+  description: 'Entdecke dein kosmisches Potenzial durch personalisierte Quizzes und astrologische Einblicke.',
 };
 
 export default function RootLayout({
@@ -11,9 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
-        <main>{children}</main>
+    <html lang="de">
+      <body className="min-h-screen bg-gray-50">
+        <Providers>
+          <main className="container mx-auto px-4 py-8">{children}</main>
+        </Providers>
       </body>
     </html>
   );

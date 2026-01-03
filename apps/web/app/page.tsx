@@ -1,68 +1,51 @@
 /**
  * QuizzMe Home Page
- *
- * This is a skeleton placeholder for the main landing page.
- * Full functionality will be implemented when features are ready.
+ * Landing page with links to main features.
  */
-
-const BUILD_MODE = process.env.NEXT_PUBLIC_BUILD_MODE || 'server';
 
 export default function HomePage() {
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontFamily: 'system-ui, sans-serif',
-      padding: '2rem',
-      textAlign: 'center'
-    }}>
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>
-        QuizzMe
-      </h1>
-      <p style={{ fontSize: '1.25rem', color: '#666', marginBottom: '2rem' }}>
-        Your Cosmic Learning Journey Awaits
-      </p>
-
-      <div style={{
-        padding: '1rem 2rem',
-        backgroundColor: '#f0f0f0',
-        borderRadius: '8px',
-        marginBottom: '2rem'
-      }}>
-        <p style={{ margin: 0, fontSize: '0.875rem', color: '#888' }}>
-          Build Mode: <strong>{BUILD_MODE}</strong>
+    <div className="min-h-[80vh] flex flex-col items-center justify-center text-center">
+      <div className="mb-12">
+        <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          QuizzMe
+        </h1>
+        <p className="text-xl text-gray-600">
+          Entdecke dein kosmisches Selbst
         </p>
       </div>
 
-      <nav style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+      <div className="grid md:grid-cols-2 gap-6 max-w-2xl w-full mb-12">
         <a
           href="/verticals/quiz"
-          style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: '#0070f3',
-            color: 'white',
-            textDecoration: 'none',
-            borderRadius: '6px'
-          }}
+          className="group p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-indigo-400"
         >
-          Quiz Verticals
+          <div className="text-4xl mb-4">📊</div>
+          <h2 className="text-xl font-bold mb-2 group-hover:text-indigo-600 transition-colors">
+            Quizzes
+          </h2>
+          <p className="text-gray-600">
+            Beantworte Fragen und erfahre mehr über deine Persönlichkeit
+          </p>
         </a>
+
         <a
           href="/astrosheet"
-          style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: '#7c3aed',
-            color: 'white',
-            textDecoration: 'none',
-            borderRadius: '6px'
-          }}
+          className="group p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-purple-400"
         >
-          AstroSheet Dashboard
+          <div className="text-4xl mb-4">✨</div>
+          <h2 className="text-xl font-bold mb-2 group-hover:text-purple-600 transition-colors">
+            AstroSheet
+          </h2>
+          <p className="text-gray-600">
+            Dein persönliches Dashboard mit allen Ergebnissen
+          </p>
         </a>
-      </nav>
+      </div>
+
+      <p className="text-sm text-gray-400">
+        KI-generiert • Keine Vorhersage • Nur zur Reflexion
+      </p>
     </div>
   );
 }

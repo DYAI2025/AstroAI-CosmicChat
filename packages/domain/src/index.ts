@@ -95,6 +95,18 @@ export {
   createLikertMapping,
   defineQuiz,
   defineTrait,
+
+  // Predefined traits and quizzes
+  BIG_FIVE_TRAITS,
+  TRAIT_OPENNESS,
+  TRAIT_CONSCIENTIOUSNESS,
+  TRAIT_EXTRAVERSION,
+  TRAIT_AGREEABLENESS,
+  TRAIT_NEUROTICISM,
+  PERSONALITY_QUIZ,
+  ALL_TRAITS,
+  ALL_QUIZZES,
+  initializeRegistry,
 } from './profile';
 
 export type {

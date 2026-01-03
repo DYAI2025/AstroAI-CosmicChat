@@ -18,7 +18,7 @@ const nextConfig = {
   reactStrictMode: true,
 
   // Transpile monorepo packages
-  transpilePackages: ['@quizzme/api-contracts', '@quizzme/storage'],
+  transpilePackages: ['@quizzme/api-contracts', '@quizzme/storage', '@quizzme/domain'],
 
   // Environment variables available at build time
   env: {

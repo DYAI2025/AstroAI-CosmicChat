@@ -42,3 +42,17 @@ export type {
   TraitDefinition,
   RegistryStats,
 } from './registry';
+
+// Predefined traits and quizzes
+export {
+  BIG_FIVE_TRAITS,
+  TRAIT_OPENNESS,
+  TRAIT_CONSCIENTIOUSNESS,
+  TRAIT_EXTRAVERSION,
+  TRAIT_AGREEABLENESS,
+  TRAIT_NEUROTICISM,
+  PERSONALITY_QUIZ,
+  ALL_TRAITS,
+  ALL_QUIZZES,
+  initializeRegistry,
+} from './predefined';
