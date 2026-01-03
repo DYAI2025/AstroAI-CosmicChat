@@ -1,0 +1,58 @@
+{
+  "name": "@quizzme/domain",
+  "version": "1.0.0",
+  "description": "Domain logic and Trait Engine for QuizzMe psychological profiling",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./trait-engine": {
+      "import": "./dist/trait-engine/index.mjs",
+      "require": "./dist/trait-engine/index.js",
+      "types": "./dist/trait-engine/index.d.ts"
+    },
+    "./profile": {
+      "import": "./dist/profile/index.mjs",
+      "require": "./dist/profile/index.js",
+      "types": "./dist/profile/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts src/trait-engine/index.ts src/profile/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts src/trait-engine/index.ts src/profile/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "quizzme",
+    "domain",
+    "trait-engine",
+    "psychological-profiling",
+    "isomorphic"
+  ],
+  "author": "QuizzMe Team",
+  "license": "MIT",
+  "dependencies": {
+    "@quizzme/api-contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.0.0"
+  },
+  "sideEffects": false
+}

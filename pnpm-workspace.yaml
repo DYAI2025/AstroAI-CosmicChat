@@ -1,0 +1,7 @@
+packages:
+  # Applications
+  - "apps/*"
+  # Shared packages
+  - "packages/*"
+  # Services (Python microservice excluded from pnpm)
+  # - "services/*"

@@ -1,0 +1,44 @@
+{
+  "name": "@quizzme/cosmic-bridge",
+  "version": "0.1.0",
+  "description": "Node bridge and orchestration layer for QuizzMe - connects frontend to cloud services",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "dev": "tsup src/index.ts --format esm --dts --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint src/",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "quizzme",
+    "bridge",
+    "orchestration",
+    "node"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@quizzme/api-contracts": "workspace:*",
+    "@quizzme/domain": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^3.0.0"
+  }
+}
