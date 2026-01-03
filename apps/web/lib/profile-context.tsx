@@ -6,6 +6,7 @@
  */
 
 import type {
+  MarkerWeight,
   ProfileSnapshot,
   PsychologicalProfile,
   QuizAnswer,
@@ -15,6 +16,7 @@ import type {
   TraitScore,
 } from '@quizzme/domain';
 import {
+  aggregateMarkers,
   deserializeProfile,
   initializeRegistry,
   InMemoryQuizRegistry,
@@ -61,6 +63,8 @@ interface ProfileContextState {
 interface ProfileContextActions {
   /** Submit quiz answers and update profile */
   submitQuizAnswers: (answers: QuizAnswer[]) => Promise<TraitScore[]>;
+  /** Submit markers from quiz and update Big Five traits */
+  submitMarkers: (markers: MarkerWeight[], source: string) => Promise<void>;
   /** Get a quiz definition by ID */
   getQuiz: (quizId: string) => QuizDefinition | undefined;
   /** Get all available quizzes */
@@ -189,6 +193,50 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     [state.profile, user]
   );
 
+  // Submit markers from quiz
+  const submitMarkers = useCallback(
+    async (markers: MarkerWeight[], _source: string) => {
+      if (!state.profile || !user) {
+        throw new Error('Profile not initialized');
+      }
+
+      // Convert MarkerWeight[] to MarkerInput[] for aggregator
+      const markerInputs = markers.map((m) => ({
+        id: m.id,
+        weight: m.weight,
+      }));
+
+      // Get Big Five deltas from markers
+      const deltas = aggregateMarkers(markerInputs);
+
+      // Create trait scores from deltas (convert -1..1 to 0..100)
+      const traitScores: TraitScore[] = [
+        { traitId: 'trait.openness', score: 50 + deltas.openness * 50, confidence: 0.5, sourceQuizId: _source, questionCount: markers.length },
+        { traitId: 'trait.conscientiousness', score: 50 + deltas.conscientiousness * 50, confidence: 0.5, sourceQuizId: _source, questionCount: markers.length },
+        { traitId: 'trait.extraversion', score: 50 + deltas.extraversion * 50, confidence: 0.5, sourceQuizId: _source, questionCount: markers.length },
+        { traitId: 'trait.agreeableness', score: 50 + deltas.agreeableness * 50, confidence: 0.5, sourceQuizId: _source, questionCount: markers.length },
+        { traitId: 'trait.neuroticism', score: 50 + deltas.neuroticism * 50, confidence: 0.5, sourceQuizId: _source, questionCount: markers.length },
+      ];
+
+      // Update profile using existing engine
+      const updatedProfile = engine.updateProfile(state.profile, traitScores);
+
+      // Save to storage
+      const storageKey = `${user.id}_${PROFILE_STORAGE_KEY}`;
+      await storage.set(storageKey, serializeProfile(updatedProfile));
+
+      // Update snapshot
+      const newSnapshot = engine.getSnapshot(updatedProfile);
+
+      setState((prev) => ({
+        ...prev,
+        profile: updatedProfile,
+        snapshot: newSnapshot,
+      }));
+    },
+    [state.profile, user]
+  );
+
   // Get quiz by ID
   const getQuiz = useCallback((quizId: string) => {
     return registry.getQuiz(quizId);
@@ -238,6 +286,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const contextValue: ProfileContextValue = {
     ...state,
     submitQuizAnswers,
+    submitMarkers,
     getQuiz,
     getAllQuizzes,
     getTrait,
