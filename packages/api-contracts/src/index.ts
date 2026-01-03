@@ -88,8 +88,25 @@ export type {
   QuizProgressPayload,
 } from './types/api';
 
+// Auth types
+export type {
+  User,
+  AnonymousUser,
+  AuthenticatedUser,
+  AuthState,
+  AuthProvider,
+  SignUpRequest,
+  SignInRequest,
+  OAuthSignInRequest,
+  AuthResult,
+  AuthError,
+  AuthErrorCode,
+  AuthService,
+} from './auth';
+
 // ============================================================================
 // Re-export all types for convenience
 // ============================================================================
 
 export * from './types';
+export * from './auth';

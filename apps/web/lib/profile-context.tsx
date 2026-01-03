@@ -24,9 +24,10 @@ import {
 import { createLocalStorage } from '@quizzme/storage';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
+import { useAuth } from './auth-context';
+
 // Storage keys
-const PROFILE_STORAGE_KEY = 'quizzme_profile';
-const USER_ID_STORAGE_KEY = 'quizzme_user_id';
+const PROFILE_STORAGE_KEY = 'profile';
 
 // Initialize registry with predefined data
 const registry = new InMemoryQuizRegistry();
@@ -79,16 +80,10 @@ type ProfileContextValue = ProfileContextState & ProfileContextActions;
 const ProfileContext = createContext<ProfileContextValue | null>(null);
 
 /**
- * Generate a simple user ID
- */
-function generateUserId(): string {
-  return `user_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-}
-
-/**
  * Profile Provider component
  */
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
+  const { user, isLoading: authLoading } = useAuth();
   const [state, setState] = useState<ProfileContextState>({
     profile: null,
     snapshot: null,
@@ -97,18 +92,28 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     isInitialized: false,
   });
 
-  // Initialize profile on mount
+  // Initialize profile when auth is ready and user exists
   useEffect(() => {
     async function initProfile() {
-      try {
-        // Try to load existing profile
-        const savedProfile = await storage.get<SerializedProfile>(PROFILE_STORAGE_KEY);
-        let userId = await storage.get<string>(USER_ID_STORAGE_KEY);
+      // Wait for auth to complete
+      if (authLoading) return;
 
-        if (!userId) {
-          userId = generateUserId();
-          await storage.set(USER_ID_STORAGE_KEY, userId);
-        }
+      // If no user, set loading to false but don't initialize
+      if (!user) {
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+          isInitialized: true,
+        }));
+        return;
+      }
+
+      try {
+        const userId = user.id;
+        const storageKey = `${userId}_${PROFILE_STORAGE_KEY}`;
+
+        // Try to load existing profile
+        const savedProfile = await storage.get<SerializedProfile>(storageKey);
 
         let profile: PsychologicalProfile;
 
@@ -119,7 +124,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
           // Create new profile
           profile = engine.createProfile(userId);
           // Save immediately
-          await storage.set(PROFILE_STORAGE_KEY, serializeProfile(profile));
+          await storage.set(storageKey, serializeProfile(profile));
         }
 
         // Create initial snapshot
@@ -144,12 +149,12 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     }
 
     initProfile();
-  }, []);
+  }, [authLoading, user]);
 
   // Submit quiz answers
   const submitQuizAnswers = useCallback(
     async (answers: QuizAnswer[]): Promise<TraitScore[]> => {
-      if (!state.profile) {
+      if (!state.profile || !user) {
         throw new Error('Profile not initialized');
       }
 
@@ -165,8 +170,9 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       // Update profile
       const updatedProfile = engine.updateProfile(state.profile, scores);
 
-      // Save to storage
-      await storage.set(PROFILE_STORAGE_KEY, serializeProfile(updatedProfile));
+      // Save to storage with user-scoped key
+      const storageKey = `${user.id}_${PROFILE_STORAGE_KEY}`;
+      await storage.set(storageKey, serializeProfile(updatedProfile));
 
       // Update snapshot
       const newSnapshot = engine.getSnapshot(updatedProfile);
@@ -180,7 +186,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
       return scores;
     },
-    [state.profile]
+    [state.profile, user]
   );
 
   // Get quiz by ID
@@ -213,14 +219,13 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
   // Reset profile
   const resetProfile = useCallback(async () => {
-    let userId = await storage.get<string>(USER_ID_STORAGE_KEY);
-    if (!userId) {
-      userId = generateUserId();
-      await storage.set(USER_ID_STORAGE_KEY, userId);
+    if (!user) {
+      throw new Error('User not authenticated');
     }
 
-    const newProfile = engine.createProfile(userId);
-    await storage.set(PROFILE_STORAGE_KEY, serializeProfile(newProfile));
+    const newProfile = engine.createProfile(user.id);
+    const storageKey = `${user.id}_${PROFILE_STORAGE_KEY}`;
+    await storage.set(storageKey, serializeProfile(newProfile));
     const newSnapshot = engine.getSnapshot(newProfile);
 
     setState((prev) => ({
@@ -228,7 +233,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       profile: newProfile,
       snapshot: newSnapshot,
     }));
-  }, []);
+  }, [user]);
 
   const contextValue: ProfileContextValue = {
     ...state,
