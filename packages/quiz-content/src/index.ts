@@ -1,8 +1,11 @@
 export * from './types';
 
-// Cluster exports will be added as we migrate quizzes
+// Identity Cluster
+export { krafttierQuiz, IDENTITY_QUIZZES } from './clusters/identity';
+
+// Cluster registry
 export const CLUSTERS = {
-  identity: [] as string[],
+  identity: ['quiz.krafttier'] as const,
   social: [] as string[],
   'life-path': [] as string[],
   relationship: [] as string[],
