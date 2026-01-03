@@ -11,7 +11,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { useAuth } from '../../lib/auth-context';
+import { useAuth } from '../../../lib/auth-context';
 
 export default function LoginPage() {
   const { isAuthenticated, isLoading, continueAsAnonymous } = useAuth();
